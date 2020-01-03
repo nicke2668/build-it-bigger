@@ -16,7 +16,7 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
 	private static MyApi myApiService = null;
-	private Context context;
+	private Context context; //todo use WeakReference
 
 	@Override
 	protected String doInBackground(Context... params) {

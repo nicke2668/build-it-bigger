@@ -1,14 +1,11 @@
 package com.udacity.gradle.builditbigger;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,31 +17,23 @@ public class EndpointsAsyncTaskTest extends InstrumentationTestCase {
 	public final ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Test
-	public void testNonEmptyJoke() throws Exception {
+	public void testNonEmptyJoke() {
 
-		final CountDownLatch signal = new CountDownLatch(1);
-		final EndpointsAsyncTask task = new EndpointsAsyncTask() {
+		String result = null;
+		EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask() {
 			@Override
 			protected void onPostExecute(String result) {
-				super.onPostExecute(result);
-				signal.countDown();
+				//do nothing
 			}
-
 		};
-
+		endpointsAsyncTask.execute(InstrumentationRegistry.getContext());
 		try {
-			runTestOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					task.execute(InstrumentationRegistry.getInstrumentation().getContext());
-				}
-			});
-		} catch (Throwable throwable) {
-			throwable.printStackTrace();
+			result = endpointsAsyncTask.get();
+			Log.d("EndpointsAsyncTaskTest", "Retrieved a non-empty string successfully: " + result);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		signal.await(5, TimeUnit.SECONDS);
-		Assert.assertFalse(task.get().isEmpty());
+		assertNotNull(result);
 	}
 
 }
